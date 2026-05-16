@@ -279,30 +279,35 @@ canvas {
     opacity: 1;
 }
 
-/* Projects Section (Horizontal) */
+/* Projects Section (Dynamic Layout) */
 .projects-section {
     padding: 0;
     overflow: hidden;
     height: 100vh;
+    background: var(--bg);
 }
 
 .horizontal-scroll-wrapper {
     height: 100vh;
     display: flex;
     align-items: center;
-    padding: 0 10vw;
+    justify-content: center;
+    width: 100vw;
 }
 
 .projects-container {
     display: flex;
-    gap: 5rem;
-    padding-right: 20vw;
+    position: relative;
+    height: 400px;
+    width: 100%;
+    align-items: center;
 }
 
 .project-card {
     min-width: 600px;
     height: 400px;
-    position: relative;
+    position: absolute;
+    left: 0;
     background: var(--glass);
     border: 1px solid var(--border);
     border-radius: 20px;
@@ -311,9 +316,16 @@ canvas {
     transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
 }
 
+/* Initial state for cards index 5+ */
+.project-card.slide-in {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
 .project-card:hover {
     transform: scale(1.02);
     border-color: var(--accent);
+    z-index: 10;
 }
 
 .project-inner {
@@ -385,6 +397,13 @@ canvas {
 
 .btn-project:hover {
     border-bottom: 1px solid var(--accent);
+}
+
+.project-header {
+    position: absolute;
+    top: 5rem;
+    left: 2rem;
+    z-index: 5;
 }
 
 /* Skills Section */
