@@ -113,7 +113,7 @@
                             echo '<div class="project-card h-card">';
                             echo '  <div class="project-inner">';
                             echo '    <div class="project-media">';
-                            echo '      <img src="https://opengraph.githubassets.com/1/' . $repo['full_name'] . '" alt="' . $repo['name'] . '" class="parallax-img">';
+                            echo '      <img src="https://opengraph.githubassets.com/1/' . $repo['full_name'] . '" alt="' . $repo['name'] . '">';
                             echo '    </div>';
                             echo '    <div class="project-info">';
                             echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
@@ -137,22 +137,15 @@
                     <?php
                     if (!empty($repos) && count($repos) > 5) {
                         $remaining = array_slice($repos, 5);
-                        $local_images = ['assets/images/pic1.png', 'assets/images/pic2.JPG', 'assets/images/pic3.JPG', 'assets/images/pic4.JPG'];
-                        
                         foreach ($remaining as $index => $repo) {
                             $side = ($index % 2 === 0) ? 'left' : 'right';
-                            $img_src = $local_images[$index % 4]; // Cycle through local images
-                            
                             echo '<div class="tree-card ' . $side . '">';
-                            echo '  <div class="project-card v-card">';
+                            echo '  <div class="project-card">';
                             echo '    <div class="project-inner">';
-                            echo '      <div class="project-media reveal-mask">';
-                            echo '        <img src="' . $img_src . '" alt="' . $repo['name'] . '" class="parallax-img-v">';
-                            echo '      </div>';
                             echo '      <div class="project-info">';
                             echo '        <h3>' . htmlspecialchars($repo['name']) . '</h3>';
-                            echo '        <p>' . htmlspecialchars($repo['description'] ?? 'Technical showcase of ' . ($repo['language'] ?? 'development')) . '</p>';
-                            echo '        <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">View Repository</a>';
+                            echo '        <p>' . htmlspecialchars($repo['description'] ?? 'Technical showcase') . '</p>';
+                            echo '        <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">View</a>';
                             echo '      </div>';
                             echo '    </div>';
                             echo '  </div>';
