@@ -106,13 +106,12 @@
                     
                     <!-- Projects will be injected here via PHP/JS -->
                     <?php
-                    // Fetch GitHub repos (Placeholder for now, logic in github-api.php)
                     include 'includes/github-api.php';
                     $repos = get_github_repos('FaakhirMemon03');
                     
                     if (!empty($repos)) {
                         foreach ($repos as $repo) {
-                            if ($repo['name'] === 'My-Portfolio') continue; // Skip current
+                            // Show all public repos
                             echo '<div class="project-card">';
                             echo '  <div class="project-inner">';
                             echo '    <div class="project-media">';
