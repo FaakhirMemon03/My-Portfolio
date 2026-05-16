@@ -4,16 +4,14 @@
  */
 
 function get_github_repos($username) {
-    $url = "https://api.github.com/users/{$username}/repos?sort=updated&per_page=100";
+    // Increased visibility and removed type restrictions to ensure all public repos are fetched
+    $url = "https://api.github.com/users/{$username}/repos?sort=created&per_page=100";
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_USERAGENT, 'FaakhirPortfolioApp'); // Required by GitHub API
+    curl_setopt($ch, CURLOPT_USERAGENT, 'FaakhirPortfolioApp'); 
     
-    // Optional: Add GitHub Personal Access Token for higher rate limits
-    // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: token YOUR_TOKEN_HERE'));
-
     $response = curl_exec($ch);
     
     if (curl_errno($ch)) {

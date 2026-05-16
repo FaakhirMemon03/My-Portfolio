@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Reset scroll to top on refresh
+    window.scrollTo(0, 0);
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    }
+
     // Initialize Lenis Smooth Scroll
     const lenis = new Lenis();
     function raf(time) {
@@ -22,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1,
                 ease: 'expo.inOut',
                 onComplete: () => {
+                    // Force scroll to top again just in case
+                    window.scrollTo(0, 0);
+                    lenis.scrollTo(0, { immediate: true });
                     initAnimations();
                 }
             });
@@ -46,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle Hover Effects for Cursor
-    const interactiveElements = document.querySelectorAll('a, button, .project-card, .gallery-item');
+    const interactiveElements = document.querySelectorAll('a, button, .project-card, .gallery-item, .skill-card');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
             gsap.to(follower, {
@@ -146,8 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const progress = bar.getAttribute('data-progress');
             gsap.to(bar, {
                 scrollTrigger: {
-                    trigger: '.skills-section',
-                    start: 'top 70%'
+                    trigger: bar, // Trigger individually for better accuracy
+                    start: 'top 90%'
                 },
                 width: progress,
                 duration: 2,
