@@ -96,61 +96,40 @@
             </div>
         </section>
 
-        <!-- PHASE 1: PROJECTS HORIZONTAL -->
-        <section id="projects-horizontal" class="section projects-horizontal">
-            <div class="horizontal-scroll-container">
-                <div class="project-header">
-                    <h2 class="section-title">FEATURED</h2>
-                </div>
-                <div class="h-projects-wrapper">
+        <!-- PROJECTS SECTION (Horizontal) -->
+        <section id="projects" class="section projects-section">
+            <div class="horizontal-scroll-wrapper">
+                <div class="projects-container">
+                    <div class="project-header">
+                        <h2 class="section-title">PROJECTS</h2>
+                    </div>
+                    
+                    <!-- Projects will be injected here via PHP/JS -->
                     <?php
                     include 'includes/github-api.php';
                     $repos = get_github_repos('FaakhirMemon03');
                     
                     if (!empty($repos)) {
-                        $first_five = array_slice($repos, 0, 5);
-                        foreach ($first_five as $repo) {
-                            echo '<div class="project-card h-card">';
+                        foreach ($repos as $repo) {
+                            // Show all public repos
+                            echo '<div class="project-card">';
                             echo '  <div class="project-inner">';
                             echo '    <div class="project-media">';
                             echo '      <img src="https://opengraph.githubassets.com/1/' . $repo['full_name'] . '" alt="' . $repo['name'] . '">';
                             echo '    </div>';
                             echo '    <div class="project-info">';
                             echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
-                            echo '      <div class="project-tags"><span class="tag">' . ($repo['language'] ?? 'GitHub') . '</span></div>';
-                            echo '      <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">Explore</a>';
-                            echo '    </div>';
-                            echo '  </div>';
-                            echo '</div>';
-                        }
-                    }
-                    ?>
-                </div>
-            </div>
-        </section>
-
-        <!-- PHASE 2: PROJECTS TREE (VERTICAL) -->
-        <section id="projects-tree" class="section projects-tree">
-            <div class="container">
-                <h2 class="section-title">ARCHIVE</h2>
-                <div class="tree-wrapper">
-                    <?php
-                    if (!empty($repos) && count($repos) > 5) {
-                        $remaining = array_slice($repos, 5);
-                        foreach ($remaining as $index => $repo) {
-                            $side = ($index % 2 === 0) ? 'left' : 'right';
-                            echo '<div class="tree-card ' . $side . '">';
-                            echo '  <div class="project-card">';
-                            echo '    <div class="project-inner">';
-                            echo '      <div class="project-info">';
-                            echo '        <h3>' . htmlspecialchars($repo['name']) . '</h3>';
-                            echo '        <p>' . htmlspecialchars($repo['description'] ?? 'Technical showcase') . '</p>';
-                            echo '        <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">View</a>';
+                            echo '      <p>' . htmlspecialchars($repo['description'] ?? 'Innovative project built with ' . ($repo['language'] ?? 'various technologies')) . '</p>';
+                            echo '      <div class="project-tags">';
+                            echo '        <span class="tag">' . ($repo['language'] ?? 'GitHub') . '</span>';
                             echo '      </div>';
+                            echo '      <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">View Repo</a>';
                             echo '    </div>';
                             echo '  </div>';
                             echo '</div>';
                         }
+                    } else {
+                        echo '<p>Loading cinematic projects...</p>';
                     }
                     ?>
                 </div>
