@@ -4,7 +4,7 @@
  */
 
 function get_github_repos($username) {
-    $url = "https://api.github.com/users/{$username}/repos?sort=updated&per_page=10";
+    $url = "https://api.github.com/users/{$username}/repos?sort=updated&per_page=100";
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

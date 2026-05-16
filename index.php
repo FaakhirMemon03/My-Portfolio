@@ -64,12 +64,33 @@
                 <div class="about-grid">
                     <div class="about-image">
                         <div class="image-wrapper">
-                            <img src="assets/images/pic2.JPG" alt="Faakhir Memon">
+                            <img src="assets/images/pic1.png" alt="Faakhir Memon">
                         </div>
                     </div>
                     <div class="about-text">
                         <h2 class="section-title">STORY</h2>
                         <p class="story-para">I craft digital experiences that blend <span class="glow">art</span> with <span class="glow">code</span>. My mission is to push the boundaries of what's possible on the web, creating immersive journeys that captivate and inspire.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISUAL GALLERY SECTION -->
+        <section id="gallery" class="section gallery-section">
+            <div class="container">
+                <h2 class="section-title">VISUALS</h2>
+                <div class="gallery-grid">
+                    <div class="gallery-item" data-speed="0.1">
+                        <img src="assets/images/pic2.JPG" alt="Faakhir Memon Work">
+                        <div class="gallery-overlay"><span>INNOVATION</span></div>
+                    </div>
+                    <div class="gallery-item" data-speed="0.2">
+                        <img src="assets/images/pic3.JPG" alt="Faakhir Memon Style">
+                        <div class="gallery-overlay"><span>CREATIVITY</span></div>
+                    </div>
+                    <div class="gallery-item" data-speed="0.15">
+                        <img src="assets/images/pic4.JPG" alt="Faakhir Memon Vision">
+                        <div class="gallery-overlay"><span>DEDICATION</span></div>
                     </div>
                 </div>
             </div>
