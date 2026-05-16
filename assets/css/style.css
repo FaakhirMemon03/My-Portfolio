@@ -391,18 +391,31 @@ canvas {
 .skills-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
+    gap: 4rem;
+}
+
+.skill-category h3 {
+    font-size: 1.5rem;
+    letter-spacing: 0.3rem;
+    margin-bottom: 2rem;
+    color: var(--accent);
+    border-left: 2px solid var(--accent);
+    padding-left: 1rem;
+}
+
+.skill-item {
+    margin-bottom: 1.5rem;
 }
 
 .skill-info {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-weight: 700;
 }
 
 .skill-bar {
-    height: 4px;
+    height: 2px;
     background: var(--border);
     position: relative;
 }
