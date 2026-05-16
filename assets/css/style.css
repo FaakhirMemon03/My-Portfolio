@@ -390,41 +390,58 @@ canvas {
 /* Skills Section */
 .skills-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
 }
 
-.skill-category h3 {
-    font-size: 1.5rem;
-    letter-spacing: 0.3rem;
-    margin-bottom: 2rem;
-    color: var(--accent);
-    border-left: 2px solid var(--accent);
-    padding-left: 1rem;
+.skill-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-.skill-item {
+.skill-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+}
+
+.skill-card.highlight {
+    border-color: rgba(var(--accent-rgb), 0.5);
+    box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.1);
+}
+
+.card-header {
+    font-weight: 900;
+    font-size: 1.1rem;
     margin-bottom: 1.5rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
 }
 
-.skill-info {
+.skill-list {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.skill-item-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.skill-item-mini span {
+    font-size: 0.85rem;
     font-weight: 700;
+    color: var(--gray);
 }
 
-.skill-bar {
-    height: 2px;
-    background: var(--border);
-    position: relative;
-}
-
-.bar-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
+.skill-item-mini .bar-fill {
+    height: 1px;
     background: var(--accent);
     width: 0;
     box-shadow: var(--glow);
