@@ -62,6 +62,11 @@
         <section id="about" class="section about-section">
             <div class="container">
                 <div class="about-grid">
+                    <div class="about-image">
+                        <div class="image-wrapper">
+                            <img src="assets/images/pic2.JPG" alt="Faakhir Memon">
+                        </div>
+                    </div>
                     <div class="about-text">
                         <h2 class="section-title">STORY</h2>
                         <p class="story-para">I craft digital experiences that blend <span class="glow">art</span> with <span class="glow">code</span>. My mission is to push the boundaries of what's possible on the web, creating immersive journeys that captivate and inspire.</p>
