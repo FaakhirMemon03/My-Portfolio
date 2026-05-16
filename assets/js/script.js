@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 duration: 1,
                 ease: 'expo.inOut',
                 onComplete: () => {
+                    // Force scroll to top again just in case
                     window.scrollTo(0, 0);
                     lenis.scrollTo(0, { immediate: true });
                     initAnimations();
@@ -53,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Handle Hover Effects
+    // Handle Hover Effects for Cursor
     const interactiveElements = document.querySelectorAll('a, button, .project-card, .gallery-item, .skill-card');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
@@ -90,6 +91,33 @@ document.addEventListener('DOMContentLoaded', () => {
             ease: 'power3.out'
         });
 
+        // Section Title Parallax
+        document.querySelectorAll('.section-title').forEach(title => {
+            gsap.to(title, {
+                scrollTrigger: {
+                    trigger: title,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                x: 100,
+                ease: 'none'
+            });
+        });
+
+        // About Story Reveal
+        gsap.from('.story-para', {
+            scrollTrigger: {
+                trigger: '.about-section',
+                start: 'top 80%',
+                end: 'top 20%',
+                scrub: true
+            },
+            opacity: 0.2,
+            y: 50,
+            duration: 1
+        });
+
         // Gallery Item Parallax
         document.querySelectorAll('.gallery-item').forEach(item => {
             const speed = item.getAttribute('data-speed');
@@ -105,61 +133,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // --- DYNAMIC PROJECTS ANIMATION ---
-        const projects = gsap.utils.toArray('.project-card');
+        // Horizontal Scroll for Projects
         const projectsContainer = document.querySelector('.projects-container');
-        
-        if (projects.length > 0) {
-            const tl = gsap.timeline({
+        if (projectsContainer) {
+            gsap.to(projectsContainer, {
+                x: () => -(projectsContainer.scrollWidth - window.innerWidth + window.innerWidth * 0.2),
+                ease: 'none',
                 scrollTrigger: {
                     trigger: '.projects-section',
                     start: 'top top',
-                    end: () => `+=${projects.length * 100}%`, // More length for more projects
-                    scrub: 1.5,
+                    end: () => `+=${projectsContainer.scrollWidth}`,
+                    scrub: 1,
                     pin: true,
                     anticipatePin: 1
                 }
-            });
-
-            // 1. First 5 repos move right
-            const firstBatch = projects.slice(0, 5);
-            tl.to(firstBatch, {
-                xPercent: -100 * (firstBatch.length - 1),
-                x: (i) => i * 650, // Space them out
-                ease: 'none',
-                duration: 2
-            });
-
-            // 2. Remaining repos slide from alternating sides
-            projects.forEach((card, index) => {
-                if (index < 5) return; // Already handled
-
-                const direction = index % 2 === 0 ? 1 : -1; // Even = Right, Odd = Left
-                
-                tl.fromTo(card, 
-                    { 
-                        x: direction * window.innerWidth, 
-                        opacity: 0,
-                        scale: 0.5,
-                        rotateY: direction * 45
-                    },
-                    { 
-                        x: 0, 
-                        opacity: 1, 
-                        scale: 1,
-                        rotateY: 0,
-                        duration: 1,
-                        ease: 'power2.out'
-                    },
-                    "> -0.5" // Overlap with previous card
-                );
-
-                // Move the batch together to make space for the next card
-                tl.to(projects.slice(0, index + 1), {
-                    x: (i) => (i - index) * 650, // Shift existing cards left
-                    duration: 0.5,
-                    ease: 'none'
-                }, "<");
             });
         }
 
@@ -168,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const progress = bar.getAttribute('data-progress');
             gsap.to(bar, {
                 scrollTrigger: {
-                    trigger: bar,
+                    trigger: bar, // Trigger individually for better accuracy
                     start: 'top 90%'
                 },
                 width: progress,

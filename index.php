@@ -75,6 +75,101 @@
             </div>
         </section>
 
+        <!-- PHASE 1: HORIZONTAL SCROLL PROJECTS -->
+        <section id="projects-horizontal" class="section horizontal-section">
+            <div class="horizontal-wrapper">
+                <div class="horizontal-inner">
+                    <div class="horizontal-header">
+                        <h2 class="section-title">HIGHLIGHTS</h2>
+                    </div>
+                    
+                    <?php
+                    include 'includes/github-api.php';
+                    $repos = get_github_repos('FaakhirMemon03');
+                    
+                    // First 5 projects for Phase 1
+                    $highlight_repos = array_slice($repos, 0, 5);
+                    $timeline_repos = array_slice($repos, 5);
+                    
+                    $highlight_images = [
+                        'assets/images/pic1.png',
+                        'assets/images/pic2.JPG',
+                        'assets/images/pic3.JPG',
+                        'assets/images/pic4.JPG',
+                        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1964&auto=format&fit=crop'
+                    ];
+
+                    foreach ($highlight_repos as $index => $repo) {
+                        $img = $highlight_images[$index % 5];
+                        echo '<div class="h-project-card">';
+                        echo '  <div class="h-card-inner">';
+                        echo '    <div class="h-card-media">';
+                        echo '      <img src="' . $img . '" alt="' . $repo['name'] . '">';
+                        echo '    </div>';
+                        echo '    <div class="h-card-content">';
+                        echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
+                        echo '      <p>' . htmlspecialchars($repo['language'] ?? 'Creative Solution') . '</p>';
+                        echo '    </div>';
+                        echo '  </div>';
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHASE 2: VERTICAL TREE / TIMELINE -->
+        <section id="projects-timeline" class="section timeline-section">
+            <div class="container">
+                <h2 class="section-title">TIMELINE</h2>
+                <div class="timeline-container">
+                    <div class="timeline-line"></div>
+                    
+                    <?php
+                    foreach ($timeline_repos as $index => $repo) {
+                        $is_even = ($index % 2 === 0);
+                        $side_class = $is_even ? 'left' : 'right';
+                        
+                        // Use GitHub OpenGraph images for unique repo previews
+                        $img = "https://opengraph.githubassets.com/1/" . $repo['full_name'];
+                        
+                        echo '<div class="timeline-row ' . $side_class . '">';
+                        
+                        if ($is_even) {
+                            // LEFT: Image, RIGHT: Text
+                            echo '  <div class="timeline-media-card">';
+                            echo '    <div class="media-inner">';
+                            echo '      <img src="' . $img . '" alt="' . $repo['name'] . '">';
+                            echo '    </div>';
+                            echo '  </div>';
+                            echo '  <div class="timeline-dot"></div>';
+                            echo '  <div class="timeline-text">';
+                            echo '    <h3>' . htmlspecialchars($repo['name']) . '</h3>';
+                            echo '    <p>' . htmlspecialchars($repo['description'] ?? 'An innovative technical project developed by Faakhir Memon.') . '</p>';
+                            echo '    <a href="' . $repo['html_url'] . '" target="_blank" class="btn-timeline">View Project</a>';
+                            echo '  </div>';
+                        } else {
+                            // LEFT: Text, RIGHT: Image
+                            echo '  <div class="timeline-text">';
+                            echo '    <h3>' . htmlspecialchars($repo['name']) . '</h3>';
+                            echo '    <p>' . htmlspecialchars($repo['description'] ?? 'An innovative technical project developed by Faakhir Memon.') . '</p>';
+                            echo '    <a href="' . $repo['html_url'] . '" target="_blank" class="btn-timeline">View Project</a>';
+                            echo '  </div>';
+                            echo '  <div class="timeline-dot"></div>';
+                            echo '  <div class="timeline-media-card">';
+                            echo '    <div class="media-inner">';
+                            echo '      <img src="' . $img . '" alt="' . $repo['name'] . '">';
+                            echo '    </div>';
+                            echo '  </div>';
+                        }
+                        
+                        echo '</div>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </section>
+
         <!-- VISUAL GALLERY SECTION -->
         <section id="gallery" class="section gallery-section">
             <div class="container">
@@ -96,52 +191,11 @@
             </div>
         </section>
 
-        <!-- PROJECTS SECTION (Horizontal) -->
-        <section id="projects" class="section projects-section">
-            <div class="horizontal-scroll-wrapper">
-                <div class="projects-container">
-                    <div class="project-header">
-                        <h2 class="section-title">PROJECTS</h2>
-                    </div>
-                    
-                    <!-- Projects will be injected here via PHP/JS -->
-                    <?php
-                    include 'includes/github-api.php';
-                    $repos = get_github_repos('FaakhirMemon03');
-                    
-                    if (!empty($repos)) {
-                        foreach ($repos as $repo) {
-                            // Show all public repos
-                            echo '<div class="project-card">';
-                            echo '  <div class="project-inner">';
-                            echo '    <div class="project-media">';
-                            echo '      <img src="https://opengraph.githubassets.com/1/' . $repo['full_name'] . '" alt="' . $repo['name'] . '">';
-                            echo '    </div>';
-                            echo '    <div class="project-info">';
-                            echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
-                            echo '      <p>' . htmlspecialchars($repo['description'] ?? 'Innovative project built with ' . ($repo['language'] ?? 'various technologies')) . '</p>';
-                            echo '      <div class="project-tags">';
-                            echo '        <span class="tag">' . ($repo['language'] ?? 'GitHub') . '</span>';
-                            echo '      </div>';
-                            echo '      <a href="' . $repo['html_url'] . '" target="_blank" class="btn-project">View Repo</a>';
-                            echo '    </div>';
-                            echo '  </div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo '<p>Loading cinematic projects...</p>';
-                    }
-                    ?>
-                </div>
-            </div>
-        </section>
-
         <!-- SKILLS SECTION -->
         <section id="skills" class="section skills-section">
             <div class="container">
                 <h2 class="section-title">EXPERTISE</h2>
                 <div class="skills-grid">
-                    
                     <!-- 1. Frontend Development -->
                     <div class="skill-card">
                         <div class="card-header">🌐 Frontend Development</div>
@@ -152,8 +206,7 @@
                             <div class="skill-item-mini"><span>Responsive Design</span><div class="bar-fill" data-progress="95%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 2. Frameworks & Libraries -->
+                    <!-- Frameworks -->
                     <div class="skill-card">
                         <div class="card-header">🎨 Frameworks & Libs</div>
                         <div class="skill-list">
@@ -163,8 +216,7 @@
                             <div class="skill-item-mini"><span>GSAP / Framer</span><div class="bar-fill" data-progress="90%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 3. Backend Development -->
+                    <!-- Backend -->
                     <div class="skill-card">
                         <div class="card-header">🧠 Backend Development</div>
                         <div class="skill-list">
@@ -173,8 +225,7 @@
                             <div class="skill-item-mini"><span>PHP / Laravel</span><div class="bar-fill" data-progress="92%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 4. Databases -->
+                    <!-- Databases -->
                     <div class="skill-card">
                         <div class="card-header">🗄️ Databases</div>
                         <div class="skill-list">
@@ -182,8 +233,7 @@
                             <div class="skill-item-mini"><span>MySQL / Postgres</span><div class="bar-fill" data-progress="90%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 5. Web App Skills -->
+                    <!-- Web App Skills -->
                     <div class="skill-card">
                         <div class="card-header">⚡ Web App Skills</div>
                         <div class="skill-list">
@@ -192,8 +242,7 @@
                             <div class="skill-item-mini"><span>Security / Optim.</span><div class="bar-fill" data-progress="85%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 6. App Development -->
+                    <!-- App Development -->
                     <div class="skill-card">
                         <div class="card-header">📱 App Development</div>
                         <div class="skill-list">
@@ -202,8 +251,7 @@
                             <div class="skill-item-mini"><span>Electron / PWA</span><div class="bar-fill" data-progress="85%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 7. Advanced Skills -->
+                    <!-- Advanced Skills -->
                     <div class="skill-card highlight">
                         <div class="card-header">🎬 Modern / Advanced</div>
                         <div class="skill-list">
@@ -212,8 +260,7 @@
                             <div class="skill-item-mini"><span>UI/UX Principles</span><div class="bar-fill" data-progress="90%"></div></div>
                         </div>
                     </div>
-
-                    <!-- 8. Design & Tools -->
+                    <!-- Design & Tools -->
                     <div class="skill-card">
                         <div class="card-header">🎨 Design & Tools</div>
                         <div class="skill-list">
@@ -222,7 +269,6 @@
                             <div class="skill-item-mini"><span>Git / Docker</span><div class="bar-fill" data-progress="88%"></div></div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>
