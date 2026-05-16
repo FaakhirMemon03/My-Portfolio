@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Reset scroll to top
+    // Initial Reset
     window.scrollTo(0, 0);
     if (history.scrollRestoration) {
         history.scrollRestoration = 'manual';
@@ -48,10 +48,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function initAnimations() {
         // Hero Reveal
         gsap.from('.reveal-text', { y: 100, opacity: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2 });
-        gsap.from('.reveal-text-sub', { opacity: 0, y: 20, duration: 1, delay: 0.8 });
 
-        // --- PHASE 1: HORIZONTAL SCROLL (First 5) ---
+        // --- PHASE 1: HORIZONTAL SCROLL ---
         const hWrapper = document.querySelector('.h-projects-wrapper');
+        const hCards = gsap.utils.toArray('.h-card');
+        
         if (hWrapper) {
             gsap.to(hWrapper, {
                 x: () => -(hWrapper.scrollWidth - window.innerWidth + window.innerWidth * 0.2),
@@ -65,44 +66,104 @@ document.addEventListener('DOMContentLoaded', () => {
                     anticipatePin: 1
                 }
             });
+
+            // Card scale while moving
+            hCards.forEach(card => {
+                gsap.from(card, {
+                    scale: 0.8,
+                    opacity: 0.5,
+                    scrollTrigger: {
+                        trigger: card,
+                        containerAnimation: gsap.to(hWrapper, { x: -(hWrapper.scrollWidth - window.innerWidth) }), // Linked to main horizontal scroll
+                        start: 'left right',
+                        end: 'center center',
+                        scrub: true
+                    }
+                });
+            });
         }
 
-        // --- PHASE 2: TREE TIMELINE (Remaining) ---
+        // --- PHASE 2: TREE TIMELINE (ZIG-ZAG) ---
         const treeCards = gsap.utils.toArray('.tree-card');
         treeCards.forEach((card, i) => {
             const side = card.classList.contains('left') ? -1 : 1;
+            const rotation = side * 10;
             
-            gsap.from(card, {
-                x: side * 300,
-                opacity: 0,
-                scale: 0.8,
-                duration: 1.5,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 90%',
-                    end: 'top 50%',
-                    scrub: 1
+            gsap.fromTo(card, 
+                {
+                    x: side * 200,
+                    rotation: rotation,
+                    scale: 0.8,
+                    opacity: 0
+                },
+                {
+                    x: 0,
+                    rotation: 0,
+                    scale: 1,
+                    opacity: 1,
+                    duration: 1.5,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%',
+                        onEnter: () => card.classList.add('is-visible')
+                    }
                 }
+            );
+
+            // Inner Image Parallax
+            const img = card.querySelector('.parallax-img-v');
+            if (img) {
+                gsap.to(img, {
+                    y: -50,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                });
+            }
+        });
+
+        // 3D Tilt Effect on Cards
+        const allCards = document.querySelectorAll('.project-card');
+        allCards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                gsap.to(card, {
+                    rotateX: rotateX,
+                    rotateY: rotateY,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                gsap.to(card, {
+                    rotateX: 0,
+                    rotateY: 0,
+                    duration: 0.5,
+                    ease: 'power2.out'
+                });
             });
         });
 
-        // Skills Animation
+        // Skills & Progress
         document.querySelectorAll('.bar-fill').forEach(bar => {
             gsap.to(bar, {
-                scrollTrigger: { trigger: bar, start: 'top 90%' },
+                scrollTrigger: { trigger: bar, start: 'top 95%' },
                 width: bar.getAttribute('data-progress'),
                 duration: 2,
                 ease: 'expo.out'
-            });
-        });
-
-        // Gallery Parallax
-        document.querySelectorAll('.gallery-item').forEach(item => {
-            gsap.to(item, {
-                scrollTrigger: { trigger: item, start: 'top bottom', end: 'bottom top', scrub: true },
-                y: 50,
-                ease: 'none'
             });
         });
     }
