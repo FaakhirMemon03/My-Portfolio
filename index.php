@@ -142,56 +142,88 @@
             <div class="container">
                 <h2 class="section-title">EXPERTISE</h2>
                 <div class="skills-grid">
-                    <!-- Frontend -->
-                    <div class="skill-category">
-                        <h3>FRONTEND</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>React / Next.js</span><span>90%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="90%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>JavaScript / GSAP</span><span>95%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="95%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>Three.js / WebGL</span><span>85%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="85%"></div></div>
+                    
+                    <!-- 1. Frontend Development -->
+                    <div class="skill-card">
+                        <div class="card-header">🌐 Frontend Development</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>HTML5 / CSS3</span><div class="bar-fill" data-progress="95%"></div></div>
+                            <div class="skill-item-mini"><span>JavaScript (ES6+)</span><div class="bar-fill" data-progress="92%"></div></div>
+                            <div class="skill-item-mini"><span>TypeScript</span><div class="bar-fill" data-progress="85%"></div></div>
+                            <div class="skill-item-mini"><span>Responsive Design</span><div class="bar-fill" data-progress="95%"></div></div>
                         </div>
                     </div>
 
-                    <!-- Backend -->
-                    <div class="skill-category">
-                        <h3>BACKEND</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>Node.js / Express</span><span>88%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="88%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>PHP / Laravel</span><span>92%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="92%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>Python / Django</span><span>80%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="80%"></div></div>
+                    <!-- 2. Frameworks & Libraries -->
+                    <div class="skill-card">
+                        <div class="card-header">🎨 Frameworks & Libs</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>React / Next.js</span><div class="bar-fill" data-progress="90%"></div></div>
+                            <div class="skill-item-mini"><span>Vue.js</span><div class="bar-fill" data-progress="75%"></div></div>
+                            <div class="skill-item-mini"><span>Tailwind / Bootstrap</span><div class="bar-fill" data-progress="95%"></div></div>
+                            <div class="skill-item-mini"><span>GSAP / Framer</span><div class="bar-fill" data-progress="90%"></div></div>
                         </div>
                     </div>
 
-                    <!-- App & Database -->
-                    <div class="skill-category">
-                        <h3>APPS & DB</h3>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>MySQL / MongoDB</span><span>90%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="90%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>React Native</span><span>85%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="85%"></div></div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-info"><span>REST / GraphQL</span><span>90%</span></div>
-                            <div class="skill-bar"><div class="bar-fill" data-progress="90%"></div></div>
+                    <!-- 3. Backend Development -->
+                    <div class="skill-card">
+                        <div class="card-header">🧠 Backend Development</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>Node.js / Express</span><div class="bar-fill" data-progress="88%"></div></div>
+                            <div class="skill-item-mini"><span>REST APIs / Auth</span><div class="bar-fill" data-progress="90%"></div></div>
+                            <div class="skill-item-mini"><span>PHP / Laravel</span><div class="bar-fill" data-progress="92%"></div></div>
                         </div>
                     </div>
+
+                    <!-- 4. Databases -->
+                    <div class="skill-card">
+                        <div class="card-header">🗄️ Databases</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>MongoDB / Firebase</span><div class="bar-fill" data-progress="85%"></div></div>
+                            <div class="skill-item-mini"><span>MySQL / Postgres</span><div class="bar-fill" data-progress="90%"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Web App Skills -->
+                    <div class="skill-card">
+                        <div class="card-header">⚡ Web App Skills</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>MERN Stack</span><div class="bar-fill" data-progress="90%"></div></div>
+                            <div class="skill-item-mini"><span>MVC / CRUD</span><div class="bar-fill" data-progress="95%"></div></div>
+                            <div class="skill-item-mini"><span>Security / Optim.</span><div class="bar-fill" data-progress="85%"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 6. App Development -->
+                    <div class="skill-card">
+                        <div class="card-header">📱 App Development</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>React Native</span><div class="bar-fill" data-progress="88%"></div></div>
+                            <div class="skill-item-mini"><span>Flutter</span><div class="bar-fill" data-progress="80%"></div></div>
+                            <div class="skill-item-mini"><span>Electron / PWA</span><div class="bar-fill" data-progress="85%"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Advanced Skills -->
+                    <div class="skill-card highlight">
+                        <div class="card-header">🎬 Modern / Advanced</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>Three.js / WebGL</span><div class="bar-fill" data-progress="85%"></div></div>
+                            <div class="skill-item-mini"><span>GSAP / ScrollTrigger</span><div class="bar-fill" data-progress="98%"></div></div>
+                            <div class="skill-item-mini"><span>UI/UX Principles</span><div class="bar-fill" data-progress="90%"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- 8. Design & Tools -->
+                    <div class="skill-card">
+                        <div class="card-header">🎨 Design & Tools</div>
+                        <div class="skill-list">
+                            <div class="skill-item-mini"><span>Figma / Adobe XD</span><div class="bar-fill" data-progress="92%"></div></div>
+                            <div class="skill-item-mini"><span>Photoshop / Canva</span><div class="bar-fill" data-progress="95%"></div></div>
+                            <div class="skill-item-mini"><span>Git / Docker</span><div class="bar-fill" data-progress="88%"></div></div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
