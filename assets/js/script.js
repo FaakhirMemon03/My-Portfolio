@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle Hover Effects for Cursor
-    const interactiveElements = document.querySelectorAll('a, button, .project-card');
+    const interactiveElements = document.querySelectorAll('a, button, .project-card, .gallery-item');
     interactiveElements.forEach(el => {
         el.addEventListener('mouseenter', () => {
             gsap.to(follower, {
@@ -107,6 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
             opacity: 0.2,
             y: 50,
             duration: 1
+        });
+
+        // Gallery Item Parallax
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            const speed = item.getAttribute('data-speed');
+            gsap.to(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: true
+                },
+                y: 100 * speed,
+                ease: 'none'
+            });
         });
 
         // Horizontal Scroll for Projects
