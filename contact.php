@@ -27,7 +27,22 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit;
 }
 
-// 3. Configure email parameters
+// 3. Save submission into MySQL Database
+include_once 'includes/db.php';
+if ($pdo !== null) {
+    try {
+        $stmt = $pdo->prepare("INSERT INTO `contact_submissions` (`name`, `email`, `message`) VALUES (:name, :email, :message)");
+        $stmt->execute([
+            ':name' => $name,
+            ':email' => $email,
+            ':message' => $message
+        ]);
+    } catch (PDOException $e) {
+        // Fail-safe: log silently or ignore to ensure SMTP email transmission still goes through
+    }
+}
+
+// 4. Configure email parameters
 $to = 'sahibmemon433@gmail.com';
 $subject = "New Cyber-Portfolio Message from: " . $name;
 
@@ -82,7 +97,7 @@ $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 $headers .= "From: Cyberspace Portfolio <noreply@faakhirmemon.com>" . "\r\n";
 $headers .= "Reply-To: $name <$email>" . "\r\n";
 
-// 4. Send Email
+// 5. Send Email
 if (mail($to, $subject, $email_content, $headers)) {
     echo json_encode(['status' => 'success', 'message' => 'Your message was sent successfully!']);
 } else {
