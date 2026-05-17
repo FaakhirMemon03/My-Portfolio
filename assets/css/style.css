@@ -401,6 +401,16 @@ canvas {
     box-shadow: var(--glow);
 }
 
+.t-btn-group {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.timeline-row.right .t-btn-group {
+    justify-content: flex-end;
+}
+
 /* Skills Section */
 .skills-section {
     padding: 10rem 0;
