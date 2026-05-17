@@ -176,8 +176,8 @@ function animate() {
     scene.rotation.y += 0.001;
     scene.rotation.x += 0.0005;
 
-    // Camera Parallax based on scroll
-    camera.position.y = -window.scrollY * 0.002;
+    // Camera Parallax based on scroll (Clamped so the Plexus remains visible through all sections)
+    camera.position.y = Math.max(-6, -window.scrollY * 0.0005);
 
     renderer.render(scene, camera);
 }
