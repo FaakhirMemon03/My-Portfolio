@@ -125,11 +125,10 @@
                         }
 
                         foreach ($phase1_repos as $index => $repo) {
-                            $img_src = getNextImage($global_image_counter, $max_images);
-                            echo '<div class="h-card">';
+                            echo '<div class="h-card" data-repo="' . htmlspecialchars($repo['name']) . '">';
                             echo '  <div class="h-card-inner">';
                             echo '    <div class="h-card-media">';
-                            echo '      <img src="' . $img_src . '" alt="' . htmlspecialchars($repo['name']) . '" loading="lazy">';
+                            echo '      <img class="project-img" src="" alt="' . htmlspecialchars($repo['name']) . '" loading="lazy">';
                             echo '    </div>';
                             echo '    <div class="h-card-content">';
                             echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
@@ -149,14 +148,13 @@
                 <?php
                 foreach ($phase2_repos as $index => $repo) {
                     $side = ($index % 2 == 0) ? 'left' : 'right';
-                    $img_src = getNextImage($global_image_counter, $max_images);
                     
-                    echo '<div class="timeline-row ' . $side . '">';
+                    echo '<div class="timeline-row ' . $side . '" data-repo="' . htmlspecialchars($repo['name']) . '">';
                     
                     // Image Card Part
                     echo '  <div class="t-image-part">';
                     echo '    <div class="t-image-card">';
-                    echo '      <img src="' . $img_src . '" alt="Project Visual" class="parallax-img" loading="lazy">';
+                    echo '      <img src="" alt="Project Visual" class="parallax-img project-img" loading="lazy">';
                     echo '      <div class="t-image-overlay"></div>';
                     echo '    </div>';
                     echo '  </div>';
