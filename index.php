@@ -111,12 +111,25 @@
                         $all_repos = get_github_repos('FaakhirMemon03');
                         $phase1_repos = array_slice($all_repos, 0, 5);
                         $phase2_repos = array_slice($all_repos, 5);
+                        
+                        $global_image_counter = 1;
+                        $max_images = 42;
+                        
+                        function getNextImage(&$counter, $max) {
+                            $img = "assets/images/{$counter}.png";
+                            $counter++;
+                            if ($counter > $max) {
+                                $counter = 1;
+                            }
+                            return $img;
+                        }
 
                         foreach ($phase1_repos as $index => $repo) {
+                            $img_src = getNextImage($global_image_counter, $max_images);
                             echo '<div class="h-card">';
                             echo '  <div class="h-card-inner">';
                             echo '    <div class="h-card-media">';
-                            echo '      <img src="https://opengraph.githubassets.com/1/' . $repo['full_name'] . '" alt="' . $repo['name'] . '">';
+                            echo '      <img src="' . $img_src . '" alt="' . htmlspecialchars($repo['name']) . '" loading="lazy">';
                             echo '    </div>';
                             echo '    <div class="h-card-content">';
                             echo '      <h3>' . htmlspecialchars($repo['name']) . '</h3>';
@@ -134,19 +147,16 @@
             <div class="phase-2-vertical container">
                 <div class="timeline-line"></div>
                 <?php
-                // Image mapping for Phase 2
-                $imgs = ['pic1.png', 'pic2.JPG', 'pic3.JPG', 'pic4.JPG'];
-                
                 foreach ($phase2_repos as $index => $repo) {
                     $side = ($index % 2 == 0) ? 'left' : 'right';
-                    $img_src = 'assets/images/' . $imgs[$index % count($imgs)];
+                    $img_src = getNextImage($global_image_counter, $max_images);
                     
                     echo '<div class="timeline-row ' . $side . '">';
                     
                     // Image Card Part
                     echo '  <div class="t-image-part">';
                     echo '    <div class="t-image-card">';
-                    echo '      <img src="' . $img_src . '" alt="Project Visual" class="parallax-img">';
+                    echo '      <img src="' . $img_src . '" alt="Project Visual" class="parallax-img" loading="lazy">';
                     echo '      <div class="t-image-overlay"></div>';
                     echo '    </div>';
                     echo '  </div>';
