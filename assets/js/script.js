@@ -49,40 +49,53 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (horizontalWrap) {
             
-            // 1. Initial State
-            gsap.set(hCards, { opacity: 0, scale: 0.8 });
+            // Calculate dynamic width to scroll
+            let getScrollWidth = () => horizontalWrap.scrollWidth - window.innerWidth;
 
-            // 2. Calculate dynamic width to scroll
-            let scrollWidth = horizontalWrap.scrollWidth - window.innerWidth;
-
-            // 3. Pin and Horizontal Scroll Tween
+            // Pin and Horizontal Scroll Tween
             const horizontalTween = gsap.to(horizontalWrap, {
-                x: -scrollWidth,
+                x: () => -getScrollWidth(),
                 ease: 'none',
                 scrollTrigger: {
                     trigger: '.phase-1-horizontal',
                     start: 'top top',
-                    end: () => `+=${scrollWidth}`,
+                    end: () => `+=${getScrollWidth()}`,
                     scrub: 1,
                     pin: true,
-                    anticipatePin: 1
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true
                 }
             });
 
-            // 4. Card Entrance bound to containerAnimation
-            hCards.forEach((card) => {
-                gsap.to(card, {
-                    opacity: 1,
-                    scale: 1,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        containerAnimation: horizontalTween,
-                        start: 'left 85%',
-                        end: 'left 40%',
-                        scrub: true
-                    }
-                });
+            // Card Entrance Animations
+            hCards.forEach((card, index) => {
+                // If it's the first card, it should appear right when the section comes into view
+                if (index === 0) {
+                    gsap.to(card, {
+                        opacity: 1,
+                        scale: 1,
+                        ease: 'power2.out',
+                        scrollTrigger: {
+                            trigger: '.phase-1-horizontal',
+                            start: 'top 80%',
+                            end: 'top 30%',
+                            scrub: true
+                        }
+                    });
+                } else {
+                    gsap.to(card, {
+                        opacity: 1,
+                        scale: 1,
+                        ease: 'power2.out',
+                        scrollTrigger: {
+                            trigger: card,
+                            containerAnimation: horizontalTween,
+                            start: 'left 95%',
+                            end: 'left 40%',
+                            scrub: true
+                        }
+                    });
+                }
             });
         }
 
