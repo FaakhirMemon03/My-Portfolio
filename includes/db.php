@@ -5,7 +5,7 @@
  */
 define('DB_HOST', 'localhost');
 define('DB_USER', 'FM_Portfolio');
-define('DB_PASS', ''); // TODO: Enter your Hostinger Database Password here before uploading!
+define('DB_PASS', 'F1M_Portfolio##'); // TODO: Enter your Hostinger Database Password here before uploading!
 define('DB_NAME', 'FM_Portfolio');
 
 $pdo = null;
