@@ -1,6 +1,6 @@
 /**
  * Three.js Cinematic Background Scene
- * Ultimate "Plexus / Neural Network" Developer Aesthetic
+ * High-End Developer "Tech Core" Aesthetic
  */
 
 const scene = new THREE.Scene();
@@ -15,171 +15,137 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// --- NEURAL NETWORK / PLEXUS SETTINGS ---
-const particleCount = 400; // Optimal balance between density and 60fps performance
-const maxDistance = 4.0;   // Max distance to form a connection line
-const maxConnections = 8;  // Max connections per node
+// --- 1. CORE TECH SHAPE (Digital Brain / Abstract Core) ---
+// Using a TorusKnot to represent complexity, neural networks, and problem solving
+const coreGeometry = new THREE.TorusKnotGeometry(2.5, 0.8, 150, 40);
 
-const particles = new THREE.BufferGeometry();
-const particlePositions = new Float32Array(particleCount * 3);
-const particleVelocities = [];
-
-// Initialize particles with random positions and velocities
-for (let i = 0; i < particleCount; i++) {
-    const x = (Math.random() - 0.5) * 40;
-    const y = (Math.random() - 0.5) * 40;
-    const z = (Math.random() - 0.5) * 20 - 5; 
-
-    particlePositions[i * 3] = x;
-    particlePositions[i * 3 + 1] = y;
-    particlePositions[i * 3 + 2] = z;
-
-    particleVelocities.push({
-        x: (Math.random() - 0.5) * 0.02,
-        y: (Math.random() - 0.5) * 0.02,
-        z: (Math.random() - 0.5) * 0.02
-    });
-}
-
-particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
-
-// Particle Material (Glowing Nodes)
-const pMaterial = new THREE.PointsMaterial({
+// Points (Nodes) for the core
+const corePointsMat = new THREE.PointsMaterial({
+    size: 0.025,
     color: 0x00f2ff,
-    size: 0.08,
     transparent: true,
     opacity: 0.9,
     blending: THREE.AdditiveBlending
 });
+const corePoints = new THREE.Points(coreGeometry, corePointsMat);
+scene.add(corePoints);
 
-const pointCloud = new THREE.Points(particles, pMaterial);
-scene.add(pointCloud);
-
-// --- LINES (Connections) ---
-// Pre-allocate buffer geometry for lines
-const linesGeometry = new THREE.BufferGeometry();
-const maxLines = particleCount * maxConnections; 
-const positions = new Float32Array(maxLines * 6); 
-const colors = new Float32Array(maxLines * 6); 
-
-linesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-linesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-const linesMaterial = new THREE.LineBasicMaterial({
-    vertexColors: true,
-    blending: THREE.AdditiveBlending,
+// Wireframe (Connections) for the core
+const coreWireMat = new THREE.LineBasicMaterial({
+    color: 0x00f2ff,
     transparent: true,
-    opacity: 0.3
+    opacity: 0.15,
+    blending: THREE.AdditiveBlending
 });
+const coreWire = new THREE.LineSegments(
+    new THREE.EdgesGeometry(coreGeometry), 
+    coreWireMat
+);
+scene.add(coreWire);
 
-const linesMesh = new THREE.LineSegments(linesGeometry, linesMaterial);
-scene.add(linesMesh);
+// --- 2. DATA PARTICLE STREAM ---
+// Floating matrix of background data points
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 4000;
+const posArray = new Float32Array(particlesCount * 3);
+const speeds = new Float32Array(particlesCount);
+
+for(let i = 0; i < particlesCount * 3; i++) {
+    // Spread them across a wide volume
+    posArray[i] = (Math.random() - 0.5) * 40; 
+}
+
+for(let i=0; i < particlesCount; i++) {
+    speeds[i] = Math.random() * 0.03 + 0.005;
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+particlesGeometry.setAttribute('speed', new THREE.BufferAttribute(speeds, 1));
+
+const pMaterial = new THREE.PointsMaterial({
+    size: 0.035,
+    color: 0x00f2ff,
+    transparent: true,
+    opacity: 0.6,
+    blending: THREE.AdditiveBlending
+});
+const particles = new THREE.Points(particlesGeometry, pMaterial);
+scene.add(particles);
+
+// --- CAMERA & LIGHTING ---
+camera.position.z = 7;
 
 // --- MOUSE INTERACTION ---
-let mousePos = new THREE.Vector3(0, 0, 0);
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(9999, 9999); // Off-screen initially
-const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
 
-window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    
-    // Project mouse 2D into 3D world space
-    raycaster.setFromCamera(mouse, camera);
-    raycaster.ray.intersectPlane(plane, mousePos);
+window.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX - windowHalfX);
+    mouseY = (e.clientY - windowHalfY);
 });
 
-// Camera positioning
-camera.position.z = 10;
-
 // --- ANIMATION LOOP ---
-const colorBase = new THREE.Color(0x00f2ff); // Neon Cyan
+const clock = new THREE.Clock();
 
 function animate() {
-    requestAnimationFrame(animate);
-    
-    let vertexpos = 0;
-    let colorpos = 0;
-    let numConnected = 0;
+    const elapsedTime = clock.getElapsedTime();
 
-    const positionsArray = pointCloud.geometry.attributes.position.array;
+    // Smooth mouse follow targets
+    targetX = mouseX * 0.001;
+    targetY = mouseY * 0.001;
 
-    for (let i = 0; i < particleCount; i++) {
-        // Move nodes
-        positionsArray[i * 3] += particleVelocities[i].x;
-        positionsArray[i * 3 + 1] += particleVelocities[i].y;
-        positionsArray[i * 3 + 2] += particleVelocities[i].z;
+    // 1. Rotate Core
+    corePoints.rotation.y += 0.002;
+    corePoints.rotation.x += 0.001;
+    coreWire.rotation.y += 0.002;
+    coreWire.rotation.x += 0.001;
 
-        // Bounce off boundaries to keep them in view
-        if (positionsArray[i * 3] > 20 || positionsArray[i * 3] < -20) particleVelocities[i].x *= -1;
-        if (positionsArray[i * 3 + 1] > 20 || positionsArray[i * 3 + 1] < -20) particleVelocities[i].y *= -1;
-        if (positionsArray[i * 3 + 2] > 5 || positionsArray[i * 3 + 2] < -15) particleVelocities[i].z *= -1;
+    // 2. Core Pulsing / Breathing Effect
+    const scale = 1 + Math.sin(elapsedTime * 2) * 0.03;
+    corePoints.scale.set(scale, scale, scale);
+    coreWire.scale.set(scale, scale, scale);
 
-        // Interactive Mouse Repulsion (Push nodes away softly like a magnetic field)
-        let dxMouse = mousePos.x - positionsArray[i * 3];
-        let dyMouse = mousePos.y - positionsArray[i * 3 + 1];
-        let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+    // 3. Subtle mouse interaction for core
+    corePoints.rotation.y += 0.02 * (targetX - corePoints.rotation.y);
+    corePoints.rotation.x += 0.02 * (targetY - corePoints.rotation.x);
+    coreWire.rotation.y += 0.02 * (targetX - coreWire.rotation.y);
+    coreWire.rotation.x += 0.02 * (targetY - coreWire.rotation.x);
+
+    // 4. Animate Data Stream (Particles flowing upwards)
+    const positions = particles.geometry.attributes.position.array;
+    const pSpeeds = particles.geometry.attributes.speed.array;
+
+    for(let i=0; i<particlesCount; i++) {
+        let i3 = i * 3;
+        // Move y upwards
+        positions[i3 + 1] += pSpeeds[i];
         
-        if (distMouse < 5) {
-            positionsArray[i * 3] -= dxMouse * 0.015;
-            positionsArray[i * 3 + 1] -= dyMouse * 0.015;
-        }
-
-        // Calculate line connections based on proximity
-        let connections = 0;
-
-        for (let j = i + 1; j < particleCount; j++) {
-            if (connections >= maxConnections) break;
-
-            let dx = positionsArray[i * 3] - positionsArray[j * 3];
-            let dy = positionsArray[i * 3 + 1] - positionsArray[j * 3 + 1];
-            let dz = positionsArray[i * 3 + 2] - positionsArray[j * 3 + 2];
-            let dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-            // If close enough, draw a connecting line
-            if (dist < maxDistance) {
-                const alpha = 1.0 - (dist / maxDistance);
-
-                // Start vertex
-                positions[vertexpos++] = positionsArray[i * 3];
-                positions[vertexpos++] = positionsArray[i * 3 + 1];
-                positions[vertexpos++] = positionsArray[i * 3 + 2];
-                
-                colors[colorpos++] = colorBase.r * alpha;
-                colors[colorpos++] = colorBase.g * alpha;
-                colors[colorpos++] = colorBase.b * alpha;
-
-                // End vertex
-                positions[vertexpos++] = positionsArray[j * 3];
-                positions[vertexpos++] = positionsArray[j * 3 + 1];
-                positions[vertexpos++] = positionsArray[j * 3 + 2];
-                
-                colors[colorpos++] = colorBase.r * alpha;
-                colors[colorpos++] = colorBase.g * alpha;
-                colors[colorpos++] = colorBase.b * alpha;
-
-                connections++;
-                numConnected++;
-            }
+        // Reset if it goes too high (simulating infinite stream)
+        if(positions[i3 + 1] > 20) {
+            positions[i3 + 1] = -20;
+            positions[i3] = (Math.random() - 0.5) * 40;     // random x
+            positions[i3 + 2] = (Math.random() - 0.5) * 40; // random z
         }
     }
+    particles.geometry.attributes.position.needsUpdate = true;
 
-    // Update geometry buffers
-    pointCloud.geometry.attributes.position.needsUpdate = true;
+    // Rotate the entire particle field slowly
+    particles.rotation.y = elapsedTime * 0.05;
+
+    // 5. Scroll Interaction (Parallax)
+    const scrollY = window.scrollY;
+    // Move camera down slightly as you scroll down
+    camera.position.y = -scrollY * 0.003;
     
-    linesMesh.geometry.setDrawRange(0, numConnected * 2);
-    linesMesh.geometry.attributes.position.needsUpdate = true;
-    linesMesh.geometry.attributes.color.needsUpdate = true;
-
-    // Slow cinematic rotation of the entire network
-    scene.rotation.y += 0.001;
-    scene.rotation.x += 0.0005;
-
-    // Camera Parallax based on scroll (Clamped so the Plexus remains visible through all sections)
-    camera.position.y = Math.max(-6, -window.scrollY * 0.0005);
+    // Smooth camera mouse parallax
+    camera.position.x += (mouseX * 0.003 - camera.position.x) * 0.05;
 
     renderer.render(scene, camera);
+    requestAnimationFrame(animate);
 }
 
 animate();
