@@ -34,9 +34,25 @@
 
     <!-- Loader -->
     <div class="loader">
+        <canvas id="loader-canvas"></canvas>
         <div class="loader-content">
-            <span class="loader-text">FAAKHIR MEMON</span>
-            <div class="loader-bar"></div>
+            <div class="loader-title">
+                <span class="letter">F</span>
+                <span class="letter">A</span>
+                <span class="letter">A</span>
+                <span class="letter">K</span>
+                <span class="letter">H</span>
+                <span class="letter">I</span>
+                <span class="letter">R</span>
+                <span class="space">&nbsp;</span>
+                <span class="letter">M</span>
+                <span class="letter">E</span>
+                <span class="letter">M</span>
+                <span class="letter">O</span>
+                <span class="letter">N</span>
+            </div>
+            <div class="loader-percent">00%</div>
+            <div class="loader-sub">INITIALIZING CYBERSPACE...</div>
         </div>
     </div>
 
@@ -279,6 +295,7 @@
     </main>
 
     <!-- Scripts -->
+    <script src="assets/js/loader.js"></script>
     <script src="assets/js/three-scene.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
