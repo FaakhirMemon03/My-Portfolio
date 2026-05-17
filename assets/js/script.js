@@ -104,6 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    window.initAnimations = initAnimations;
+
     function initAnimations() {
         // Map images to repositories dynamically
         assignProjectImages();
