@@ -170,6 +170,35 @@ const plexusLines = new THREE.LineSegments(lineGeometry, lineMaterial);
 scene.add(plexusLines);
 
 
+// --- 4. DEEP-SPACE SCROLLING STARFIELD ---
+// Creates a starry space travel parallax effect as you scroll down
+const starCount = 1800;
+const starGeo = new THREE.BufferGeometry();
+const starPositions = new Float32Array(starCount * 3);
+
+for (let i = 0; i < starCount; i++) {
+    let i3 = i * 3;
+    // Spread stars very widely on X, deeply along Y (matches vertical timeline scroll), and Z (creates parallax)
+    starPositions[i3] = (Math.random() - 0.5) * 60;         // X spread
+    starPositions[i3 + 1] = Math.random() * -180 + 10;      // Y deep path
+    starPositions[i3 + 2] = (Math.random() - 0.5) * 16 - 3; // Z depth
+}
+
+starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+
+const starMat = new THREE.PointsMaterial({
+    size: 0.045,
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.65,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+});
+
+const starField = new THREE.Points(starGeo, starMat);
+scene.add(starField);
+
+
 // --- MOUSE INTERACTION ---
 let mouse = new THREE.Vector2();
 let targetMouse = new THREE.Vector2();
@@ -338,6 +367,11 @@ function animate() {
     // 5. Scroll Interaction (Parallax)
     const scrollY = window.scrollY;
     camera.position.y = -scrollY * 0.0035;
+    
+    // Rotate Starfield slowly
+    starField.rotation.z = elapsedTime * 0.008;
+    // Twinkle effect
+    starField.material.size = 0.045 + Math.sin(elapsedTime * 2.5) * 0.015;
     
     // Smooth camera mouse parallax
     camera.position.x += (mouse.x * 0.8 - camera.position.x) * 0.05;
