@@ -4,8 +4,8 @@
  */
 
 function get_github_repos($username) {
-    // Increased visibility and removed type restrictions to ensure all public repos are fetched
-    $url = "https://api.github.com/users/{$username}/repos?sort=created&per_page=100";
+    // Adding type=all ensures that both original repositories and forks are fetched
+    $url = "https://api.github.com/users/{$username}/repos?sort=updated&per_page=100&type=all";
     
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
