@@ -38,7 +38,77 @@ document.addEventListener('DOMContentLoaded', () => {
         gsap.to(follower, { x: e.clientX, y: e.clientY, duration: 0.3 });
     });
 
+    // DYNAMIC PROJECT IMAGE MAPPING & FALLBACK ENGINE
+    function assignProjectImages() {
+        const cards = document.querySelectorAll('[data-repo]');
+        
+        // Exact Special Cases
+        const specialCases = {
+            'my-portfolio': 'assets/images/pic1.png',
+            'my_portfolio': 'assets/images/pic1.png',
+            'my portfolio': 'assets/images/pic1.png',
+            'faakhirmemon03': 'assets/images/pic2.JPG',
+            'faakhirmemon03-3': 'assets/images/pic3.JPG',
+            'faakhirmemon03_3': 'assets/images/pic3.JPG',
+            'faakhirmemon03 3': 'assets/images/pic3.JPG'
+        };
+        
+        let specialCounter = 0;
+        const specialPics = ['assets/images/pic1.png', 'assets/images/pic2.JPG', 'assets/images/pic3.JPG', 'assets/images/pic4.JPG'];
+
+        cards.forEach((card) => {
+            const repoName = card.getAttribute('data-repo');
+            const img = card.querySelector('.project-img');
+            if (!img) return;
+
+            const normalized = repoName.toLowerCase().trim();
+            
+            // Check exact special cases
+            if (specialCases[normalized]) {
+                img.src = specialCases[normalized];
+                return;
+            }
+            
+            // Check if repo name contains special keywords -> assign dynamically from pic1-pic4
+            if (normalized.includes('portfolio') || normalized.includes('faakhirmemon03') || normalized.includes('faakhir')) {
+                img.src = specialPics[specialCounter % specialPics.length];
+                specialCounter++;
+                return;
+            }
+
+            // Normal repo: Convert to lowercase, replace spaces/underscores with hyphens
+            const hyphenated = normalized.replace(/[\s_]+/g, '-');
+            const spaced = normalized.replace(/[-_]+/g, ' ');
+            const underscored = normalized.replace(/[\s-]+/g, '_');
+            
+            // Try loading from assets/images/
+            img.src = `assets/images/${hyphenated}.png`;
+            
+            let errorCount = 0;
+            img.onerror = () => {
+                errorCount++;
+                if (errorCount === 1) {
+                    // Try with spaces (for AM trading, fitness tracker, etc.)
+                    img.src = `assets/images/${spaced}.png`;
+                } else if (errorCount === 2) {
+                    // Try with underscores
+                    img.src = `assets/images/${underscored}.png`;
+                } else if (errorCount === 3) {
+                    // Fallback to local default image (assets/images/pic1.png)
+                    img.src = 'assets/images/pic1.png';
+                } else if (errorCount === 4) {
+                    // Final failsafe: Load dynamic OpenGraph preview from GitHub
+                    img.src = `https://opengraph.githubassets.com/1/FaakhirMemon03/${repoName}`;
+                    img.onerror = null; // Prevent infinite loops
+                }
+            };
+        });
+    }
+
     function initAnimations() {
+        // Map images to repositories dynamically
+        assignProjectImages();
+
         // Hero Reveal
         gsap.from('.reveal-text', { y: 100, opacity: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2 });
         gsap.from('.reveal-text-sub', { opacity: 0, y: 20, duration: 1, delay: 0.8, ease: 'power3.out' });
