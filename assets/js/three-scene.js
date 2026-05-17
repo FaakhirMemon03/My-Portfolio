@@ -1,5 +1,6 @@
 /**
  * Three.js Cinematic Background Scene
+ * High-End Developer "Tech Core" Aesthetic
  */
 
 const scene = new THREE.Scene();
@@ -7,71 +8,141 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 const renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector('#hero-canvas'),
     antialias: true,
-    alpha: true
+    alpha: true,
+    powerPreference: "high-performance"
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// Create a liquid wave plane
-const geometry = new THREE.PlaneGeometry(20, 20, 64, 64);
-const material = new THREE.MeshStandardMaterial({
+// --- 1. CORE TECH SHAPE (Digital Brain / Abstract Core) ---
+// Using a TorusKnot to represent complexity, neural networks, and problem solving
+const coreGeometry = new THREE.TorusKnotGeometry(2.5, 0.8, 150, 40);
+
+// Points (Nodes) for the core
+const corePointsMat = new THREE.PointsMaterial({
+    size: 0.025,
     color: 0x00f2ff,
-    wireframe: true,
     transparent: true,
-    opacity: 0.2,
-    emissive: 0x00f2ff,
-    emissiveIntensity: 0.5
+    opacity: 0.9,
+    blending: THREE.AdditiveBlending
 });
+const corePoints = new THREE.Points(coreGeometry, corePointsMat);
+scene.add(corePoints);
 
-const plane = new THREE.Mesh(geometry, material);
-plane.rotation.x = -Math.PI / 3;
-scene.add(plane);
+// Wireframe (Connections) for the core
+const coreWireMat = new THREE.LineBasicMaterial({
+    color: 0x00f2ff,
+    transparent: true,
+    opacity: 0.15,
+    blending: THREE.AdditiveBlending
+});
+const coreWire = new THREE.LineSegments(
+    new THREE.EdgesGeometry(coreGeometry), 
+    coreWireMat
+);
+scene.add(coreWire);
 
-// Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
+// --- 2. DATA PARTICLE STREAM ---
+// Floating matrix of background data points
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 4000;
+const posArray = new Float32Array(particlesCount * 3);
+const speeds = new Float32Array(particlesCount);
 
-const pointLight = new THREE.PointLight(0x00f2ff, 2);
-pointLight.position.set(5, 5, 5);
-scene.add(pointLight);
+for(let i = 0; i < particlesCount * 3; i++) {
+    // Spread them across a wide volume
+    posArray[i] = (Math.random() - 0.5) * 40; 
+}
 
-camera.position.z = 5;
+for(let i=0; i < particlesCount; i++) {
+    speeds[i] = Math.random() * 0.03 + 0.005;
+}
 
-// Mouse Interaction
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+particlesGeometry.setAttribute('speed', new THREE.BufferAttribute(speeds, 1));
+
+const pMaterial = new THREE.PointsMaterial({
+    size: 0.035,
+    color: 0x00f2ff,
+    transparent: true,
+    opacity: 0.6,
+    blending: THREE.AdditiveBlending
+});
+const particles = new THREE.Points(particlesGeometry, pMaterial);
+scene.add(particles);
+
+// --- CAMERA & LIGHTING ---
+camera.position.z = 7;
+
+// --- MOUSE INTERACTION ---
 let mouseX = 0;
 let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+
 window.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX / window.innerWidth) - 0.5;
-    mouseY = (e.clientY / window.innerHeight) - 0.5;
+    mouseX = (e.clientX - windowHalfX);
+    mouseY = (e.clientY - windowHalfY);
 });
 
-// Animation Loop
+// --- ANIMATION LOOP ---
 const clock = new THREE.Clock();
 
 function animate() {
     const elapsedTime = clock.getElapsedTime();
 
-    // Liquid Wave Distortion
-    const positions = plane.geometry.attributes.position.array;
-    for (let i = 0; i < positions.length; i += 3) {
-        const x = positions[i];
-        const y = positions[i + 1];
+    // Smooth mouse follow targets
+    targetX = mouseX * 0.001;
+    targetY = mouseY * 0.001;
+
+    // 1. Rotate Core
+    corePoints.rotation.y += 0.002;
+    corePoints.rotation.x += 0.001;
+    coreWire.rotation.y += 0.002;
+    coreWire.rotation.x += 0.001;
+
+    // 2. Core Pulsing / Breathing Effect
+    const scale = 1 + Math.sin(elapsedTime * 2) * 0.03;
+    corePoints.scale.set(scale, scale, scale);
+    coreWire.scale.set(scale, scale, scale);
+
+    // 3. Subtle mouse interaction for core
+    corePoints.rotation.y += 0.02 * (targetX - corePoints.rotation.y);
+    corePoints.rotation.x += 0.02 * (targetY - corePoints.rotation.x);
+    coreWire.rotation.y += 0.02 * (targetX - coreWire.rotation.y);
+    coreWire.rotation.x += 0.02 * (targetY - coreWire.rotation.x);
+
+    // 4. Animate Data Stream (Particles flowing upwards)
+    const positions = particles.geometry.attributes.position.array;
+    const pSpeeds = particles.geometry.attributes.speed.array;
+
+    for(let i=0; i<particlesCount; i++) {
+        let i3 = i * 3;
+        // Move y upwards
+        positions[i3 + 1] += pSpeeds[i];
         
-        // Apply wave motion
-        positions[i + 2] = Math.sin(x * 0.5 + elapsedTime) * 0.5 + 
-                           Math.cos(y * 0.3 + elapsedTime) * 0.3;
+        // Reset if it goes too high (simulating infinite stream)
+        if(positions[i3 + 1] > 20) {
+            positions[i3 + 1] = -20;
+            positions[i3] = (Math.random() - 0.5) * 40;     // random x
+            positions[i3 + 2] = (Math.random() - 0.5) * 40; // random z
+        }
     }
-    plane.geometry.attributes.position.needsUpdate = true;
+    particles.geometry.attributes.position.needsUpdate = true;
 
-    // React to mouse
-    plane.rotation.z = mouseX * 0.1;
-    plane.rotation.y = mouseY * 0.1;
+    // Rotate the entire particle field slowly
+    particles.rotation.y = elapsedTime * 0.05;
 
-    // Sync with scroll (Camera movement)
+    // 5. Scroll Interaction (Parallax)
     const scrollY = window.scrollY;
-    camera.position.y = -scrollY * 0.002;
-    camera.rotation.z = scrollY * 0.0001;
+    // Move camera down slightly as you scroll down
+    camera.position.y = -scrollY * 0.003;
+    
+    // Smooth camera mouse parallax
+    camera.position.x += (mouseX * 0.003 - camera.position.x) * 0.05;
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -79,7 +150,7 @@ function animate() {
 
 animate();
 
-// Resize handling
+// --- RESIZE HANDLING ---
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
