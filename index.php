@@ -109,6 +109,12 @@
                         <?php
                         include_once 'includes/github-api.php';
                         $all_repos = get_github_repos('FaakhirMemon03');
+                         
+                         // Exclude all repositories related to "my portfolio"
+                         $all_repos = array_filter($all_repos, function($repo) {
+                             return stripos($repo['name'], 'portfolio') === false;
+                         });
+                         $all_repos = array_values($all_repos); // Re-index array
                         $phase1_repos = array_slice($all_repos, 0, 5);
                         $phase2_repos = array_slice($all_repos, 5);
                         
