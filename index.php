@@ -276,15 +276,15 @@
             <div class="container">
                 <div class="contact-wrap">
                     <h2 class="section-title">LET'S CONNECT</h2>
-                    <form class="contact-form">
+                    <form class="contact-form" action="contact.php" method="POST">
                         <div class="input-group">
-                            <input type="text" placeholder="Your Name" required>
+                            <input type="text" name="name" placeholder="Your Name" required>
                         </div>
                         <div class="input-group">
-                            <input type="email" placeholder="Your Email" required>
+                            <input type="email" name="email" placeholder="Your Email" required>
                         </div>
                         <div class="input-group">
-                            <textarea placeholder="Your Message" rows="5" required></textarea>
+                            <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
                         </div>
                         <button type="submit" class="btn-submit">SEND MESSAGE</button>
                     </form>
