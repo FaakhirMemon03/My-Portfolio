@@ -1,9 +1,9 @@
--- Database Schema Setup for Faakhir Memon's Cyber Portfolio
+-- Database Schema Setup for Faakhir Memon's Cyber Portfolio (Hostinger Optimized)
 -- Host: localhost
--- Database: faakhir_portfolio
+-- Database: FM_Portfolio
 
-CREATE DATABASE IF NOT EXISTS `faakhir_portfolio` CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `faakhir_portfolio`;
+-- NOTE: On Hostinger, you must create the Database and User from the hPanel first.
+-- After creating 'FM_Portfolio', you can run the table creation query below in phpMyAdmin.
 
 -- --------------------------------------------------------
 
