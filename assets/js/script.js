@@ -19,24 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(raf);
 
-    // 2. LOADER
-    const loader = document.querySelector('.loader');
-    const loaderBar = document.querySelector('.loader-bar');
-    gsap.to(loaderBar, {
-        width: '100%',
-        duration: 2,
-        ease: 'power4.inOut',
-        onComplete: () => {
-            gsap.to(loader, {
-                y: '-100%',
-                duration: 1,
-                ease: 'expo.inOut',
-                onComplete: () => {
-                    initAnimations();
-                }
-            });
-        }
-    });
+    // New Loader is managed dynamically in loader.js
 
     // 3. CURSOR
     const cursor = document.querySelector('.cursor');
