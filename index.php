@@ -59,38 +59,6 @@
     <!-- Background Canvas for Three.js -->
     <canvas id="hero-canvas"></canvas>
 
-    <!-- Top Navigation Header -->
-    <header class="header">
-        <div class="header-container">
-            <a href="#" class="logo">FAAKHIR.</a>
-            <nav class="nav-menu">
-                <a href="#about" class="nav-link">ABOUT</a>
-                <a href="#projects" class="nav-link">PROJECTS</a>
-                <a href="#skills" class="nav-link">SKILLS</a>
-                <a href="#contact" class="nav-link">CONTACT</a>
-            </nav>
-            <button class="menu-toggle" aria-label="Toggle Menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Mobile Drawer Menu -->
-    <div class="mobile-drawer">
-        <div class="drawer-header">
-            <a href="#" class="logo">FAAKHIR.</a>
-            <button class="drawer-close" aria-label="Close Menu">&times;</button>
-        </div>
-        <nav class="drawer-menu">
-            <a href="#about" class="drawer-link">ABOUT</a>
-            <a href="#projects" class="drawer-link">PROJECTS</a>
-            <a href="#skills" class="drawer-link">SKILLS</a>
-            <a href="#contact" class="drawer-link">CONTACT</a>
-        </nav>
-    </div>
-
     <main id="main">
         <!-- HERO SECTION -->
         <section id="hero" class="section hero-section">
