@@ -110,147 +110,177 @@ document.addEventListener('DOMContentLoaded', () => {
         // Map images to repositories dynamically
         assignProjectImages();
 
-        // Hero Reveal
-        gsap.from('.reveal-text', { y: 100, opacity: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2 });
-        gsap.from('.reveal-text-sub', { opacity: 0, y: 20, duration: 1, delay: 0.8, ease: 'power3.out' });
+        // Create GSAP matchMedia Instance
+        let mm = gsap.matchMedia();
 
-        // PHASE 1: HORIZONTAL SCROLL
-        const horizontalWrap = document.querySelector('.horizontal-wrap');
-        const hCards = gsap.utils.toArray('.h-card');
-        
-        if (horizontalWrap) {
+        // 1. Desktop & Large Tablets (> 768px)
+        mm.add("(min-width: 769px)", () => {
+            // Hero Reveal
+            gsap.from('.reveal-text', { y: 100, opacity: 0, duration: 1.5, ease: 'expo.out', stagger: 0.2 });
+            gsap.from('.reveal-text-sub', { opacity: 0, y: 20, duration: 1, delay: 0.8, ease: 'power3.out' });
+
+            // PHASE 1: HORIZONTAL SCROLL
+            const horizontalWrap = document.querySelector('.horizontal-wrap');
+            const hCards = gsap.utils.toArray('.h-card');
             
-            // Calculate dynamic width to scroll
-            let getScrollWidth = () => horizontalWrap.scrollWidth - window.innerWidth;
+            if (horizontalWrap) {
+                let getScrollWidth = () => horizontalWrap.scrollWidth - window.innerWidth;
 
-            // Pin and Horizontal Scroll Tween
-            const horizontalTween = gsap.to(horizontalWrap, {
-                x: () => -getScrollWidth(),
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: '.phase-1-horizontal',
-                    start: 'top top',
-                    end: () => `+=${getScrollWidth()}`,
-                    scrub: 1,
-                    pin: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true
-                }
-            });
-
-            // Card Entrance Animations
-            hCards.forEach((card, index) => {
-                // If it's the first card, it should appear right when the section comes into view
-                if (index === 0) {
-                    gsap.to(card, {
-                        opacity: 1,
-                        scale: 1,
-                        ease: 'power2.out',
-                        scrollTrigger: {
-                            trigger: '.phase-1-horizontal',
-                            start: 'top 80%',
-                            end: 'top 30%',
-                            scrub: true
-                        }
-                    });
-                } else {
-                    gsap.to(card, {
-                        opacity: 1,
-                        scale: 1,
-                        ease: 'power2.out',
-                        scrollTrigger: {
-                            trigger: card,
-                            containerAnimation: horizontalTween,
-                            start: 'left 95%',
-                            end: 'left 40%',
-                            scrub: true
-                        }
-                    });
-                }
-            });
-        }
-
-        // PHASE 2: VERTICAL TIMELINE
-        const rows = gsap.utils.toArray('.timeline-row');
-        rows.forEach((row, i) => {
-            const isLeft = row.classList.contains('left');
-            const imgPart = row.querySelector('.t-image-part');
-            const textPart = row.querySelector('.t-text-part');
-            const parallaxImg = row.querySelector('.parallax-img');
-
-            // Image Slide In
-            gsap.from(imgPart, {
-                x: isLeft ? -150 : 150,
-                opacity: 0,
-                scale: 0.8,
-                rotation: isLeft ? -5 : 5,
-                duration: 1.5,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: row,
-                    start: 'top 80%',
-                    end: 'top 20%',
-                    scrub: 1
-                }
-            });
-
-            // Text Slide In
-            gsap.from(textPart, {
-                y: 50,
-                opacity: 0,
-                duration: 1,
-                delay: 0.3,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: row,
-                    start: 'top 75%'
-                }
-            });
-
-            // Image Zoom Parallax
-            if (parallaxImg) {
-                gsap.to(parallaxImg, {
-                    scale: 1,
+                // Pin and Horizontal Scroll Tween
+                const horizontalTween = gsap.to(horizontalWrap, {
+                    x: () => -getScrollWidth(),
+                    ease: 'none',
                     scrollTrigger: {
-                        trigger: row,
-                        start: 'top bottom',
-                        end: 'bottom top',
-                        scrub: true
+                        trigger: '.phase-1-horizontal',
+                        start: 'top top',
+                        end: () => `+=${getScrollWidth()}`,
+                        scrub: 1,
+                        pin: true,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                // Card Entrance Animations
+                hCards.forEach((card, index) => {
+                    if (index === 0) {
+                        gsap.to(card, {
+                            opacity: 1,
+                            scale: 1,
+                            ease: 'power2.out',
+                            scrollTrigger: {
+                                trigger: '.phase-1-horizontal',
+                                start: 'top 80%',
+                                end: 'top 30%',
+                                scrub: true
+                            }
+                        });
+                    } else {
+                        gsap.to(card, {
+                            opacity: 1,
+                            scale: 1,
+                            ease: 'power2.out',
+                            scrollTrigger: {
+                                trigger: card,
+                                containerAnimation: horizontalTween,
+                                start: 'left 95%',
+                                end: 'left 40%',
+                                scrub: true
+                            }
+                        });
                     }
                 });
             }
+
+            // PHASE 2: VERTICAL TIMELINE
+            const rows = gsap.utils.toArray('.timeline-row');
+            rows.forEach((row, i) => {
+                const isLeft = row.classList.contains('left');
+                const imgPart = row.querySelector('.t-image-part');
+                const textPart = row.querySelector('.t-text-part');
+                const parallaxImg = row.querySelector('.parallax-img');
+
+                gsap.from(imgPart, {
+                    x: isLeft ? -150 : 150,
+                    opacity: 0,
+                    scale: 0.8,
+                    rotation: isLeft ? -5 : 5,
+                    duration: 1.5,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: row,
+                        start: 'top 80%',
+                        end: 'top 20%',
+                        scrub: 1
+                    }
+                });
+
+                gsap.from(textPart, {
+                    x: isLeft ? 150 : -150,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: row,
+                        start: 'top 80%',
+                        end: 'top 20%',
+                        scrub: 1
+                    }
+                });
+
+                if (parallaxImg) {
+                    gsap.to(parallaxImg, {
+                        yPercent: -15,
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: row,
+                            start: 'top bottom',
+                            end: 'bottom top',
+                            scrub: true
+                        }
+                    });
+                }
+            });
         });
 
-        // 4. 3D TILT EFFECT
-        const tiltElements = document.querySelectorAll('.h-card-inner, .t-image-card');
-        tiltElements.forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
+        // 2. Mobile & Small Tablets (<= 768px)
+        mm.add("(max-width: 768px)", () => {
+            // Simplified Hero reveal
+            gsap.from('.reveal-text', { y: 50, opacity: 0, duration: 1.2, ease: 'power3.out', stagger: 0.1 });
+            gsap.from('.reveal-text-sub', { opacity: 0, y: 15, duration: 0.8, delay: 0.5, ease: 'power3.out' });
 
-                gsap.to(el, {
-                    rotationX: rotateX,
-                    rotationY: rotateY,
-                    transformPerspective: 1000,
-                    ease: 'power2.out',
-                    duration: 0.5
-                });
+            // Force all horizontal cards to be visible instantly
+            const hCards = gsap.utils.toArray('.h-card');
+            hCards.forEach(card => {
+                gsap.set(card, { opacity: 1, scale: 1 });
             });
 
-            el.addEventListener('mouseleave', () => {
-                gsap.to(el, {
-                    rotationX: 0,
-                    rotationY: 0,
-                    ease: 'power2.out',
-                    duration: 0.5
+            // Simplified Timeline elements (vertical stack, scroll-triggered fade up)
+            const rows = gsap.utils.toArray('.timeline-row');
+            rows.forEach((row) => {
+                const imgPart = row.querySelector('.t-image-part');
+                const textPart = row.querySelector('.t-text-part');
+
+                gsap.from([imgPart, textPart], {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: row,
+                        start: 'top 85%',
+                        toggleActions: 'play none none none'
+                    }
                 });
             });
         });
+
+        // 3. Shared Animations (tilt is desktop only)
+        if (window.innerWidth > 1024) {
+            document.querySelectorAll('.h-card-inner, .t-image-card').forEach(el => {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    gsap.to(el, {
+                        rotationY: x * 0.03,
+                        rotationX: -y * 0.03,
+                        ease: 'power2.out',
+                        duration: 0.5
+                    });
+                });
+
+                el.addEventListener('mouseleave', () => {
+                    gsap.to(el, {
+                        rotationX: 0,
+                        rotationY: 0,
+                        ease: 'power2.out',
+                        duration: 0.5
+                    });
+                });
+            });
+        }
 
         // Skills Progress Animation
         document.querySelectorAll('.bar-fill').forEach(bar => {
@@ -273,4 +303,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // 4. MOBILE DRAWER TOGGLE CONTROL
+    const menuToggle = document.querySelector('.menu-toggle');
+    const drawerClose = document.querySelector('.drawer-close');
+    const mobileDrawer = document.querySelector('.mobile-drawer');
+    const drawerLinks = document.querySelectorAll('.drawer-link');
+
+    if (menuToggle && mobileDrawer) {
+        menuToggle.addEventListener('click', () => {
+            mobileDrawer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    }
+
+    if (drawerClose && mobileDrawer) {
+        drawerClose.addEventListener('click', () => {
+            mobileDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    }
+
+    drawerLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileDrawer.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
 });
