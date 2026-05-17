@@ -170,7 +170,18 @@
                     echo '    <div class="t-text-content">';
                     echo '      <h3 class="t-title">' . htmlspecialchars($repo['name']) . '</h3>';
                     echo '      <p class="t-desc">' . htmlspecialchars($repo['description'] ?? 'An innovative solution pushing digital boundaries with ' . ($repo['language'] ?? 'modern tech')) . '</p>';
-                    echo '      <a href="' . $repo['html_url'] . '" target="_blank" class="t-btn">VIEW PROJECT</a>';
+                    $homepage = !empty($repo['homepage']) ? $repo['homepage'] : '';
+                    echo '      <div class="t-btn-group">';
+                    if (!empty($homepage)) {
+                        echo '      <a href="' . htmlspecialchars($homepage) . '" target="_blank" class="t-btn live-btn">LIVE DEMO</a>';
+                    } else {
+                        // Dynamically predict the standard Vercel subdomain for this repo
+                        $clean_name = strtolower(preg_replace('/[^a-zA-Z0-9]/', '-', $repo['name']));
+                        $guessed_vercel = "https://{$clean_name}-faakhirmemon03.vercel.app";
+                        echo '      <a href="' . htmlspecialchars($guessed_vercel) . '" target="_blank" class="t-btn live-btn">LIVE DEMO</a>';
+                    }
+                    echo '      <a href="' . htmlspecialchars($repo['html_url']) . '" target="_blank" class="t-btn github-btn">GITHUB CODE</a>';
+                    echo '      </div>';
                     echo '    </div>';
                     echo '  </div>';
                     
