@@ -170,8 +170,6 @@
                     echo '    <div class="t-text-content">';
                     echo '      <h3 class="t-title">' . htmlspecialchars($repo['name']) . '</h3>';
                     echo '      <p class="t-desc">' . htmlspecialchars($repo['description'] ?? 'An innovative solution pushing digital boundaries with ' . ($repo['language'] ?? 'modern tech')) . '</p>';
-                    $project_url = !empty($repo['homepage']) ? $repo['homepage'] : $repo['html_url'];
-                    echo '      <a href="' . htmlspecialchars($project_url) . '" target="_blank" class="t-btn">VIEW PROJECT</a>';
                     echo '    </div>';
                     echo '  </div>';
                     
