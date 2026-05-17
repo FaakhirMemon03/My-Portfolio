@@ -272,5 +272,75 @@ document.addEventListener('DOMContentLoaded', () => {
                 ease: 'none'
             });
         });
+
+        // 4. CYBER CONTACT FORM AJAX HANDLER
+        const contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const btn = contactForm.querySelector('.btn-submit');
+                const origText = btn.innerText;
+                
+                // Animate to sending state
+                btn.innerText = 'TRANSMITTING...';
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+                btn.style.boxShadow = '0 0 25px rgba(0, 243, 255, 0.6)';
+                
+                const formData = new FormData(contactForm);
+                
+                fetch('contact.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    
+                    if (data.status === 'success' || data.status === 'success_local_fallback') {
+                        // Success state
+                        btn.innerText = 'TRANSMITTED SUCCESSFULLY ✓';
+                        btn.style.background = 'var(--accent)';
+                        btn.style.color = 'var(--bg)';
+                        btn.style.boxShadow = '0 0 35px var(--accent)';
+                        contactForm.reset();
+                    } else {
+                        // Error state
+                        btn.innerText = 'TRANSMISSION FAILED ✗';
+                        btn.style.background = '#ff007f';
+                        btn.style.borderColor = '#ff007f';
+                        btn.style.color = '#fff';
+                        btn.style.boxShadow = '0 0 35px #ff007f';
+                    }
+                    
+                    // Reset back to original state after 4 seconds
+                    setTimeout(() => {
+                        btn.innerText = origText;
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                        btn.style.boxShadow = '';
+                    }, 4000);
+                })
+                .catch(error => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.innerText = 'TRANSMISSION FAILED ✗';
+                    btn.style.background = '#ff007f';
+                    btn.style.borderColor = '#ff007f';
+                    btn.style.color = '#fff';
+                    
+                    setTimeout(() => {
+                        btn.innerText = origText;
+                        btn.style.background = '';
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                        btn.style.boxShadow = '';
+                    }, 4000);
+                });
+            });
+        }
     }
 });
