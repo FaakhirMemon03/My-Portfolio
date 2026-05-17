@@ -42,19 +42,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function assignProjectImages() {
         const cards = document.querySelectorAll('[data-repo]');
         
-        // Exact Special Cases
+        // Predefined special cases mapping case-insensitively
         const specialCases = {
-            'my-portfolio': 'assets/images/pic1.png',
-            'my_portfolio': 'assets/images/pic1.png',
-            'my portfolio': 'assets/images/pic1.png',
-            'faakhirmemon03': 'assets/images/pic2.JPG',
-            'faakhirmemon03-3': 'assets/images/pic3.JPG',
-            'faakhirmemon03_3': 'assets/images/pic3.JPG',
-            'faakhirmemon03 3': 'assets/images/pic3.JPG'
+            'my portfolio': 'assets/images/pic1.jpg',
+            'my-portfolio': 'assets/images/pic1.jpg',
+            'my_portfolio': 'assets/images/pic1.jpg',
+            'faakhirmemon03': 'assets/images/pic2.jpg',
+            'faakhirmemon03 3': 'assets/images/pic3.jpg',
+            'faakhirmemon03-3': 'assets/images/pic3.jpg',
+            'faakhirmemon03_3': 'assets/images/pic3.jpg'
         };
-        
-        let specialCounter = 0;
-        const specialPics = ['assets/images/pic1.png', 'assets/images/pic2.JPG', 'assets/images/pic3.JPG', 'assets/images/pic4.JPG'];
+
+        // Real extension mapper for Windows files in case picX.jpg fails
+        const realSpecialPicsFallback = {
+            'pic1.jpg': 'assets/images/pic1.png',
+            'pic2.jpg': 'assets/images/pic2.JPG',
+            'pic3.jpg': 'assets/images/pic3.JPG',
+            'pic4.jpg': 'assets/images/pic4.JPG'
+        };
 
         cards.forEach((card) => {
             const repoName = card.getAttribute('data-repo');
@@ -63,43 +68,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const normalized = repoName.toLowerCase().trim();
             
-            // Check exact special cases
+            // 1. Check Special Cases
             if (specialCases[normalized]) {
-                img.src = specialCases[normalized];
+                const targetSrc = specialCases[normalized];
+                img.src = targetSrc;
+                
+                // If .jpg fails, immediately fall back to the actual local file (.png/.JPG)
+                img.onerror = () => {
+                    const filename = targetSrc.split('/').pop();
+                    if (realSpecialPicsFallback[filename]) {
+                        img.src = realSpecialPicsFallback[filename];
+                        img.onerror = null; // stop error handler
+                    }
+                };
                 return;
             }
             
-            // Check if repo name contains special keywords -> assign dynamically from pic1-pic4
-            if (normalized.includes('portfolio') || normalized.includes('faakhirmemon03') || normalized.includes('faakhir')) {
-                img.src = specialPics[specialCounter % specialPics.length];
-                specialCounter++;
-                return;
-            }
-
-            // Normal repo: Convert to lowercase, replace spaces/underscores with hyphens
-            const hyphenated = normalized.replace(/[\s_]+/g, '-');
-            const spaced = normalized.replace(/[-_]+/g, ' ');
-            const underscored = normalized.replace(/[\s-]+/g, '_');
+            // 2. Normal Case: Use repo name directly as image name (assets/images/{repo-name}.png)
+            // Mixed case is fully supported, and we also provide a forgiving check for spaces/hyphens
+            const exactPath = `assets/images/${repoName}.png`;
+            const spacedName = repoName.replace(/[-_]+/g, ' ');
+            const spacedPath = `assets/images/${spacedName}.png`;
             
-            // Try loading from assets/images/
-            img.src = `assets/images/${hyphenated}.png`;
+            img.src = exactPath;
             
             let errorCount = 0;
             img.onerror = () => {
                 errorCount++;
                 if (errorCount === 1) {
-                    // Try with spaces (for AM trading, fitness tracker, etc.)
-                    img.src = `assets/images/${spaced}.png`;
+                    // Try with spaces (for forgiving matches like "AM trading.png")
+                    img.src = spacedPath;
                 } else if (errorCount === 2) {
-                    // Try with underscores
-                    img.src = `assets/images/${underscored}.png`;
+                    // Fallback to default.png as requested
+                    img.src = 'assets/images/default.png';
                 } else if (errorCount === 3) {
-                    // Fallback to local default image (assets/images/pic1.png)
+                    // Failsafe in case default.png doesn't exist locally: load one of the beautiful personal pics
                     img.src = 'assets/images/pic1.png';
                 } else if (errorCount === 4) {
-                    // Final failsafe: Load dynamic OpenGraph preview from GitHub
+                    // Final bulletproof fallback: GitHub dynamic OpenGraph card so it NEVER shows a broken image
                     img.src = `https://opengraph.githubassets.com/1/FaakhirMemon03/${repoName}`;
-                    img.onerror = null; // Prevent infinite loops
+                    img.onerror = null;
                 }
             };
         });
