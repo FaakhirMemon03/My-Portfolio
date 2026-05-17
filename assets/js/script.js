@@ -1,10 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Force Scroll to Top on Page Refresh
+    if (history.scrollRestoration) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+    
     // 1. SMOOTH SCROLL (LENIS)
     const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+    lenis.scrollTo(0, { immediate: true });
+    
     function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
