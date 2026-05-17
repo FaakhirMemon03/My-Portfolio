@@ -238,17 +238,19 @@ canvas {
 
 .horizontal-wrap {
     display: flex;
-    gap: 10vw;
+    gap: 40px;
     padding: 0 10vw;
     width: max-content;
 }
 
 .h-card {
-    min-width: 700px;
+    min-width: 600px;
+    width: 600px;
     height: 450px;
     perspective: 1000px;
     opacity: 0;
     transform: scale(0.9);
+    flex-shrink: 0;
 }
 
 .h-card-inner {
