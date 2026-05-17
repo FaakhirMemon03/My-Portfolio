@@ -48,62 +48,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const hCards = gsap.utils.toArray('.h-card');
         
         if (horizontalWrap) {
-            const scrollWidth = horizontalWrap.scrollWidth - window.innerWidth;
             
-            // Pin and Scroll
-            gsap.to(horizontalWrap, {
-                x: -scrollWidth - (window.innerWidth * 0.1), // Extra padding
+            // 1. Initial State
+            gsap.set(hCards, { opacity: 0, scale: 0.8 });
+
+            // 2. Calculate dynamic width to scroll
+            let scrollWidth = horizontalWrap.scrollWidth - window.innerWidth;
+
+            // 3. Pin and Horizontal Scroll Tween
+            const horizontalTween = gsap.to(horizontalWrap, {
+                x: -scrollWidth,
                 ease: 'none',
                 scrollTrigger: {
                     trigger: '.phase-1-horizontal',
                     start: 'top top',
-                    end: () => `+=${horizontalWrap.scrollWidth}`,
+                    end: () => `+=${scrollWidth}`,
                     scrub: 1,
                     pin: true,
                     anticipatePin: 1
                 }
             });
 
-            // Card Entrance Animations
-            hCards.forEach((card, i) => {
+            // 4. Card Entrance bound to containerAnimation
+            hCards.forEach((card) => {
                 gsap.to(card, {
                     opacity: 1,
                     scale: 1,
+                    ease: 'power2.out',
                     scrollTrigger: {
                         trigger: card,
-                        containerAnimation: gsap.getById('horizontalScroll'), // If we gave it an ID
-                        // Instead, we use the main horizontal trigger with start/end based on card position
-                        start: 'left center',
-                        toggleActions: 'play none none reverse'
+                        containerAnimation: horizontalTween,
+                        start: 'left 85%',
+                        end: 'left 40%',
+                        scrub: true
                     }
                 });
-                
-                // Card Entrance during horizontal scroll
-                gsap.fromTo(card, 
-                    { opacity: 0, scale: 0.8 },
-                    { 
-                        opacity: 1, scale: 1, 
-                        scrollTrigger: {
-                            trigger: card,
-                            start: 'left 90%',
-                            end: 'left 60%',
-                            containerAnimation: gsap.getById('horizontalScrollAnim'), // We'll wrap the tween
-                            scrub: true
-                        } 
-                    }
-                );
-            });
-
-            // Re-targeting Phase 1 entrance for simplicity
-            gsap.from('.h-card', {
-                opacity: 0,
-                scale: 0.8,
-                stagger: 0.1,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: '.phase-1-horizontal',
-                    start: 'top 80%'
-                }
             });
         }
 
